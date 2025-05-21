@@ -4,10 +4,25 @@ import { transformMetadataToProject } from "./utils/metadataUtils";
 import { Helmet } from "react-helmet";
 import "./App.css";
 
+/**
+ * @file App.jsx
+ * @description Main application component for the SUI projects showcase.
+ * Fetches and displays SUI projects with filtering, pagination, and search functionality.
+ */
+
+/**
+ * Main application component.
+ * Renders the project showcase UI, including search, filtering, and pagination.
+ * @returns {JSX.Element} The rendered App component.
+ */
 function App() {
+  // State for search term input
   const [searchTerm, setSearchTerm] = useState("");
+  // State for search type (all, name, owner)
   const [searchType, setSearchType] = useState("all"); // all, name, owner
+  // State for current page number
   const [currentPage, setCurrentPage] = useState(1);
+  // Number of projects to display per page
   const projectsPerPage = 6; // Show more on desktop, will adjust with CSS grid
 
   // Use the SUI data hook
@@ -20,12 +35,14 @@ function App() {
     refetch,
   } = useSuiData();
 
-  // Log the data to console
+  // Effect hook to log metadata when it changes. Used for debugging purposes.
   useEffect(() => {
     console.log("Metadata:", metadata);
   }, [metadata]);
 
-  // Transform metadata to project objects
+  // Memoized hook to transform raw metadata into project objects.
+  // This transformation is computationally expensive, so useMemo prevents re-computation on every render
+  // unless the `metadata` dependency changes.
   const allProjects = useMemo(() => {
     return metadata
       ? metadata
@@ -35,7 +52,9 @@ function App() {
   }, [metadata]);
   console.log(allProjects);
 
-  // Filter projects with showcase_url and by search term
+  // Memoized hook to filter projects based on search term, search type, and showcase_url.
+  // It also handles duplicate projects by keeping only unique ones based on site-name.
+  // This ensures that the filtering logic is only re-executed when relevant dependencies change.
   const filteredProjects = useMemo(() => {
     // First filter by showcase_url and search term
     // Note: Expired projects are already filtered out in transformMetadataToProject
@@ -100,17 +119,27 @@ function App() {
   // Calculate pagination
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
 
-  // Get current page projects
+  // Memoized hook to get the projects for the current page.
+  // This depends on the `filteredProjects`, `currentPage`, and `projectsPerPage`.
+  // useMemo optimizes performance by only recalculating when these dependencies change.
   const currentProjects = useMemo(() => {
     const indexOfLastProject = currentPage * projectsPerPage;
     const indexOfFirstProject = indexOfLastProject - projectsPerPage;
     return filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
   }, [filteredProjects, currentPage, projectsPerPage]);
 
-  // Function to change page
+  /**
+   * Function to change the current page.
+   * @param {number} pageNumber - The page number to navigate to.
+   */
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Generate colors for projects
+  /**
+   * Generates a color for a project card based on its index.
+   * This helps in visually distinguishing project cards.
+   * @param {number} index - The index of the project.
+   * @returns {string} A hex color code.
+   */
   const getProjectColor = (index) => {
     const colors = [
       "#377f77", // --color-secondary-800
@@ -402,7 +431,12 @@ function App() {
   );
 }
 
-// Format address to shorter version
+/**
+ * Formats a SUI address to a shorter, more readable version.
+ * It displays the first 6 characters and the last 4 characters of the address.
+ * @param {string} address - The SUI address to format.
+ * @returns {string} The formatted address, or an empty string if the input is invalid.
+ */
 function formatAddress(address) {
   if (!address) return "";
   return `${address.substring(0, 6)}...${address.substring(
