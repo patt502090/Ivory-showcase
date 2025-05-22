@@ -233,15 +233,19 @@ body {
 .pagination-button {
   min-width: 2.5rem;
   padding: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid #666;
   background-color: var(--card-background);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
+  color: #333;
+  font-weight: 500;
 }
 
 .pagination-button:hover:not(:disabled) {
   background-color: #f0f0f0;
+  border-color: #444;
+  color: #000;
 }
 
 .pagination-button.active {

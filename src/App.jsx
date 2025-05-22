@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSuiData } from "./hook/useSuiData";
 import { transformMetadataToProject } from "./utils/metadataUtils";
 import { Helmet } from "react-helmet";
