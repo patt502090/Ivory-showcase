@@ -16,7 +16,6 @@ import "./App.css";
  * @returns {JSX.Element} The rendered App component.
  */
 function App() {
-  console.log("hello worldss")
   // State for search term input
   const [searchTerm, setSearchTerm] = useState("");
   // State for search type (all, name, owner)
