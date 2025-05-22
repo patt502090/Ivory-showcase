@@ -16,7 +16,6 @@ import "./App.css";
  * @returns {JSX.Element} The rendered App component.
  */
 function App() {
-  console.log("hello worldss")
   // State for search term input
   const [searchTerm, setSearchTerm] = useState("");
   // State for search type (all, name, owner)
@@ -37,10 +36,6 @@ function App() {
   } = useSuiData();
 
   // Effect hook to log metadata when it changes. Used for debugging purposes.
-  useEffect(() => {
-    console.log("Metadata:", metadata);
-  }, [metadata]);
-
   // Memoized hook to transform raw metadata into project objects.
   // This transformation is computationally expensive, so useMemo prevents re-computation on every render
   // unless the `metadata` dependency changes.
@@ -51,7 +46,6 @@ function App() {
           .filter(Boolean)
       : [];
   }, [metadata]);
-  console.log(allProjects);
 
   // Memoized hook to filter projects based on search term, search type, and showcase_url.
   // It also handles duplicate projects by keeping only unique ones based on site-name.
